@@ -1,12 +1,7 @@
-import cv2 
+import cv2
 import os
-from sklearn.cluster import KMeans,MiniBatchKMeans
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
-import seaborn as sns
-import tqdm 
-import pandas as pd
-import numpy as np   
+import tqdm
+import pandas as pd  
 from sklearn.model_selection import train_test_split
 
 class SIFTFeatures():
@@ -34,6 +29,7 @@ class SIFTFeatures():
         else:
             list_dir_for_kmeans, list_dir_for_quantization = list_dir, list_dir
 
+        print('Creating a csv file of descriptors from a subset of images in the directory...')
         for f in tqdm.tqdm(list_dir_for_kmeans):
             ext = os.path.splitext(f)[1]
             if ext.lower() not in valid_types:
@@ -50,6 +46,7 @@ class SIFTFeatures():
         del descriptors_for_kmeans_list
 
         if self.subsample_ratio < 1.0:
+            print('Creating a csv file of descriptors for quantization...')
             for f in tqdm.tqdm(list_dir_for_quantization):
                 ext = os.path.splitext(f)[1]
                 if ext.lower() not in valid_types:
@@ -90,7 +87,7 @@ class SIFTFeatures():
 
         try:
             assert type(self.filename) == str
-            print("saving df as csv file...")
+            print("Saving df as csv file...")
             df.to_csv(self.filename+'_'+subindex+'.csv',index = False)
             print("Finished saving.")
             del df
@@ -99,6 +96,5 @@ class SIFTFeatures():
         return 0
 
 ##runtime 
-SIFTFeatures(image_folder_path= 'dataset/total', n_features=100, subsample_ratio = 0.3)
 
  
