@@ -27,6 +27,8 @@ class collection_to_hists(SIFTFeatures):
 
        
         #CLUSTERING
+        self.model_save_path = self.setup['clusterization_config']['save_model_path']
+        self.n_clusters = self.setup['clusterization_config']['n_clusters']
         if self.setup['execution_pipeline']['clusterization']:
             self.clusterization_input_csv = self.setup['clusterization_config']['input_path']
             self.elbow = self.setup['clusterization_config']['perform_elbow_method_for_tuning']
@@ -38,8 +40,8 @@ class collection_to_hists(SIFTFeatures):
                                                                 self.elbow,
                                                                 np.linspace(*self.elbow_vector, dtype = int),
                                                                 self.plot_clustering)
-            self.model_save_path = self.setup['clusterization_config']['save_model_path']
             joblib.dump(self.kmeans_model, f"{self.model_save_path}/kmeans_{self.n_clusters}.pkl")
+            del self.kmeans_model 
         print(col_size*'-')
 
          
