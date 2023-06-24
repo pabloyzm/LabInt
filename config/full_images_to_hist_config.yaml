@@ -1,0 +1,30 @@
+# config.yaml
+
+execution_pipeline:
+  SIFT_descriptor_gen: True
+  clusterization: True
+  word_gen: True
+  hist_gen: True
+
+
+SIFT_config:
+  input_path: '/root/labint/scripts/LabInt/data/GPR1200/images'
+  output_path: '/root/labint/scripts/LabInt/csv' 
+  number_of_descriptors: 1000
+  subsample_ratio: 0.35
+
+clusterization_config:
+  input_path: '/root/labint/scripts/LabInt/csv'
+  perform_elbow_method_for_tuning: True
+  elbow_method_vector: [1, 5, 6] #linspace vector
+  kmeans_plot: False
+  save_model_path: '/root/labint/scripts/LabInt/models'
+  
+word_gen_config:
+  input_path: '/root/labint/scripts/LabInt/csv'
+  output_path: '/root/labint/scripts/LabInt/csv' 
+
+histogram_gen_config:
+  input_path: '/root/labint/scripts/LabInt/csv' 
+  output_path: '/root/labint/scripts/LabInt/csv' 
+

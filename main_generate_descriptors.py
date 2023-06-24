@@ -4,7 +4,7 @@ import os
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--image_directory', type=str)
+    parser.add_argument('--image_directory', default = '', type=str)
     parser.add_argument('--n_descriptors', default = 100, type=int)
     parser.add_argument('--subsample_ratio',default = 1, type=float)
 

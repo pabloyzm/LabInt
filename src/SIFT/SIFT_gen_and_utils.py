@@ -7,20 +7,20 @@ from sklearn.model_selection import train_test_split
 class SIFTFeatures():
     """Will return a csv of flattened descriptors. Receives a directory that contains images, ndescriptors, subsample ratio"""
 
-    def __init__(self,image_folder_path, n_features = 300, subsample_ratio =1.0) -> None:
-        self.path = image_folder_path
-        self.filename = f'{image_folder_path}_descriptors'
+    def __init__(self,SIFT_input_path, output_path,n_features = 300, subsample_ratio =1.0) -> None:
+        self.SIFT_output_path = output_path
+        self.filename = 'images_descriptors'
         self.n_features = n_features
         self.subsample_ratio = subsample_ratio
-        self.descriptors_list = self.load_and_process(self.path)
+        self.descriptors_list = self.load_and_process(self.SIFT_input_path)
 
-    def load_and_process(self, path, valid_types=['.jpg','.JPG','.jpeg' ,'.JPEG']):
+    def load_and_process(self, input_path,output_path, valid_types=['.jpg','.JPG','.jpeg' ,'.JPEG']):
         """load and process saves memory by only saving the descriptors and not the image itself
         """
         descriptors_for_kmeans_list = []
         descriptors_for_quantization_list = []
 
-        list_dir = os.listdir(path)
+        list_dir = os.listdir(input_path)
         # make a dictionary with the image name and the class
         list_dir = [f for f in list_dir if os.path.splitext(f)[1].lower() in valid_types]
         labels = [self.get_class(f) for f in list_dir]
@@ -34,7 +34,7 @@ class SIFTFeatures():
             ext = os.path.splitext(f)[1]
             if ext.lower() not in valid_types:
                 continue
-            image = cv2.imread(os.path.join(path, f))
+            image = cv2.imread(os.path.join(input_path, f))
             des_kmeans = self.generate_descriptor(image)  # Assuming generate_descriptor function is defined elsewhere
             # generate a dataframe with the descriptors and a column with the image name
             df_aux = pd.DataFrame(des_kmeans)
@@ -51,7 +51,7 @@ class SIFTFeatures():
                 ext = os.path.splitext(f)[1]
                 if ext.lower() not in valid_types:
                     continue
-                image = cv2.imread(os.path.join(path, f))
+                image = cv2.imread(os.path.join(input_path, f))
                 des_quant = self.generate_descriptor(image)  # Assuming generate_descriptor function is defined elsewhere
                 # generate a dataframe with the descriptors and a column with the image name
                 df_aux = pd.DataFrame(des_quant)
@@ -81,14 +81,13 @@ class SIFTFeatures():
         # del kp
         # des = np.array(des).flatten()
         # print(kp)
-        return des
-
+        return des 
     def to_csv(self,df,subindex = ''):
 
         try:
             assert type(self.filename) == str
-            print("Saving df as csv file...")
-            df.to_csv(self.filename+'_'+subindex+'.csv',index = False)
+            print("Saving df as csv file...", end="\r")
+            df.to_csv(f'{self.SIFT_output_path}/{self.filename}'+'_'+subindex+'.csv',index = False)
             print("Finished saving.")
             del df
         except AssertionError as a:
