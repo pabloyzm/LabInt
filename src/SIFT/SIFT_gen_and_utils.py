@@ -4,15 +4,16 @@ import tqdm
 import pandas as pd  
 from sklearn.model_selection import train_test_split
 
-class SIFTFeatures():
+class SIFTFeatures:
     """Will return a csv of flattened descriptors. Receives a directory that contains images, ndescriptors, subsample ratio"""
 
-    def __init__(self,SIFT_input_path, output_path,n_features = 300, subsample_ratio =1.0) -> None:
+    def __init__(self,SIFT_input_path, output_path,n_features = 300, subsample_ratio =1.0, run = True) -> None:
         self.SIFT_output_path = output_path
         self.filename = 'images_descriptors'
         self.n_features = n_features
         self.subsample_ratio = subsample_ratio
-        self.descriptors_list = self.load_and_process(self.SIFT_input_path)
+        if run:
+            self.descriptors_list = self.load_and_process(self.SIFT_input_path)
 
     def load_and_process(self, input_path,output_path, valid_types=['.jpg','.JPG','.jpeg' ,'.JPEG']):
         """load and process saves memory by only saving the descriptors and not the image itself
@@ -63,8 +64,8 @@ class SIFTFeatures():
         return 0
 
     def get_class(self, img_path):
-        img_path = img_path.replace(".jpg", "")
-        #print(img_path)
+        img_path = img_path.lower()
+        img_path = img_path.replace(".jpg", "").replace(".jpeg", "")
         if len(img_path.split("_")) > 1:
             return img_path.split("_")[0] + "_" + "type1"
         else:
