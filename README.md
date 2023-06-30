@@ -11,6 +11,9 @@ El paquete sift contiene las utilidades para generar descriptores.
 
 #### /models
 Contiene modelos necesarios para el funcionamiento
+
+#### /models
+Contiene modelos necesarios para el funcionamiento
  
 #### /ipynb
 Contiene notebooks. 
