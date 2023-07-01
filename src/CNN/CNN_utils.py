@@ -23,7 +23,7 @@ def convnet_model_():
     return convnet_model
 
 def deep_rank_model():
-
+    
     convnet_model = convnet_model_()
     first_input = Input(shape=(224,224,3))
     first_conv = Conv2D(96, kernel_size=(8, 8),strides=(16,16), padding='same')(first_input)
@@ -55,10 +55,6 @@ def CNN_method(image1, model):
     image1 = np.expand_dims(image1, axis = 0)
     return model.predict([image1, image1, image1])[0]
 
-
-model = deep_rank_model()
-
-model.load_weights("/mnt/c//Users//pyanez//Desktop//pablo//universidad//LabInt//models//deepranking-v2-150000.h5")
 
 
 

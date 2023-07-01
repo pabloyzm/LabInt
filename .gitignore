@@ -163,7 +163,11 @@ cython_debug/
 #data 
 data
 models/deepranking-v2-150000.h5
-test
-csv
+test 
 *.jpg
 *.JPEG
+csv/images_descriptors_kmeans.csv
+csv/images_descriptors_quant.csv
+csv/total_words_quant.csv
+ 
+ 
