@@ -58,3 +58,4 @@ def CNN_method(image1, model):
 
 
 
+
