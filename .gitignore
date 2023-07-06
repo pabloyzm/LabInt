@@ -174,3 +174,4 @@ csv/total_words_quant.csv
 csv/total_histogram_CNN.csv
 csv/total_kmeans_histogram.csv
 csv/total_words_kmeans.csv
+final_histograms.csv

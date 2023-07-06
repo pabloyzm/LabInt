@@ -18,7 +18,7 @@ clusterization_config:
   elbow_method_vector: [200, 1000,50] #linspace vector
   kmeans_plot: False
   save_model_path: '/root/labint/scripts/LabInt/models'
-  n_clusters: 216
+  n_clusters: 120
 word_gen_config:
   input_path: '/root/labint/scripts/LabInt/csv'
   output_path: '/root/labint/scripts/LabInt/csv' 

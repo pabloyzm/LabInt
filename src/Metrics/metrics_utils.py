@@ -20,6 +20,7 @@ def similarity_metric(vec_1,vec_2, measure = 'euclidean'):
         raise ValueError(f"Unknown measure: {measure}")
 
 def query_image(df, image_name, measure="euclidean", feature_type = "CNN"):
+    
     df["similarity"] = df[f"features_{feature_type}"].apply(lambda x: similarity_metric(x, df[df["image_name"] == image_name][f"features_{feature_type}"].values[0], measure=measure))
     df = df.sort_values(by=['similarity'])
     df = df.reset_index(drop=True)
@@ -66,13 +67,14 @@ def get_hist_from_str(value, separator):
     
 def plot_histogram(df, index, n_bins, feature_type = 'histogram'):
     if feature_type == 'histogram':
-        hist = get_hist_from_str(df["histogram"][index], separator=' ')
+        hist = get_hist_from_str(df[f"features_histogram"][index], separator=' ')
         x = np.arange(0, n_bins)
         plt.bar(x, hist)
         plt.title("Histogram")
         plt.xlabel("Quantized Value")
         plt.ylabel("Frequency")
         plt.show()
+        return
 
     if feature_type == 'CNN':
         hist = get_hist_from_str(df["features_CNN"][index], separator = ',')
@@ -82,5 +84,16 @@ def plot_histogram(df, index, n_bins, feature_type = 'histogram'):
         plt.xlabel("Quantized Value")
         plt.ylabel("Frequency")
         plt.show()
-    else:
-        print(f'feature_type {feature_type} unknown')
+        return 
+
+def evaluate_all_features(df, image, measure = 'euclidean'):
+    
+    feature_types = ['histogram','CNN','fusion']
+    for type in feature_types:
+        print(f"----{type}----")
+        df_fusion_query = query_image(df, image, measure=measure, feature_type = type)
+        print("Match_query:", df_fusion_query['similarity'].head())
+        print("Query Normalized Rank:",evaluate_query(df_fusion_query, image, measure=measure, normalized=True,feature_type= type)['similarity'].head())    
+
+        print("----")
+
