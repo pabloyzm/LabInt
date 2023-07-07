@@ -99,3 +99,51 @@ def evaluate_all_features(df, image, measure = 'euclidean'):
 
         print("----")
 
+def precision_recall(df, matrix_, image_query, n_retrieved=10):
+    # obtener la clase de la imagen
+    image_class = SIFT.get_class(image_query)
+    #print(image_class)
+    # calcular similudes
+    df_query_ = query_image(df, matrix_, image_query)
+    #print(df_query)
+    #print(df.columns)
+    #N_rel = len(df_query[df_query["class"] == image_class])
+    #print(N_rel)
+    # get the top 10 images
+    top_10 = df_query_.iloc[1:n_retrieved+1,:]
+    # calculate TP
+    TP = len(top_10[top_10["class"] == image_class])
+    # calculate FP
+    FP = len(top_10[top_10["class"] != image_class])
+    # calculate FN
+    FN = len(df_query_[df_query_["class"] == image_class]) - TP - 1
+
+    #print(TP, FP, FN)
+    # calculate precision
+    precision_res = TP/(TP+FP)
+    # calculate recall
+    recall_res = TP/(TP+FN)
+    return precision_res, recall_res
+
+# create a similarity matrix for each image
+def similarity_matrix(df, measure="cosine", feature_type = "histogram"):
+    # create a matrix of zeros
+    similarity_matrix = np.zeros((len(df), len(df)))
+    # iterate over each image
+    for i in tqdm.tqdm(range(len(df))):
+        # get the image name
+        image_name = df["image_name"][i]
+        # calculate the similarity with the rest of images
+        for j in range(len(df)):
+            # get the image name
+            image_name_2 = df["image_name"][j]
+            if similarity_matrix[j,i] != 0:
+                similarity_matrix[i, j] = similarity_matrix[j,i]
+                continue
+            if image_name == image_name_2:
+                similarity_matrix[i, j] = 0
+                continue
+            # calculate the similarity
+            similarity_matrix[i, j] = similarity_metric(df[f"features_{feature_type}"][i], df[f"features_{feature_type}"][j], measure=measure)
+    return similarity_matrix
+
