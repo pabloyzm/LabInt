@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image 
 from src.SIFT.SIFT_gen_and_utils import SIFTFeatures
-
+SIFT = SIFTFeatures("", "", run=False)
+from tqdm import tqdm
 def similarity_metric(vec_1,vec_2, measure = 'euclidean'):
     if measure == 'euclidean':
         resta = vec_1 - vec_2
@@ -43,7 +44,7 @@ def plot_10(df_, path_to_images):
 
 def evaluate_query(df, image_query, measure="cosine", normalized=True, feature_type = "histogram"):
     # obtener la clase de la imagen
-    SIFT = SIFTFeatures("", "", run=False)
+    
     image_class = SIFT.get_class(image_query)
     print(image_class)
     # calcular similudes
