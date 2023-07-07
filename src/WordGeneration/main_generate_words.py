@@ -39,7 +39,8 @@ import sys
  
 def generate_words(csv_file: str, output_path: str, model):
     print(f'Generating words using images_descriptors_quant.csv @ {csv_file}')
-    csv_file = f'{csv_file}/images_descriptors_quant.csv'
+    #csv_file = f'{csv_file}/images_descriptors_quant.csv'
+    csv_file = f'{csv_file}/images_descriptors_kmeans.csv'
     total_lines = sum(1 for _ in open(csv_file, 'r'))
 
     inferece_model = joblib.load(model)
@@ -59,7 +60,8 @@ def generate_words(csv_file: str, output_path: str, model):
 
             chunk['visual_word'] = inferece_model.predict(chunk.fillna(0).drop(columns=['image_name', 'class', 'index']))
             chunk.drop(columns=[str(i) for i in range(128)], inplace=True)
-            chunk.to_csv(f'{output_path}/total_words_quant.csv', mode='a', index=False)
+            #chunk.to_csv(f'{output_path}/total_words_quant.csv', mode='a', index=False)
+            chunk.to_csv(f'{output_path}/total_words_kmeans.csv', mode='a', index=False)
             pbar.update(len(chunk))
 
     print(f'Output has been saved as total_words_quant.csv @ {output_path}')

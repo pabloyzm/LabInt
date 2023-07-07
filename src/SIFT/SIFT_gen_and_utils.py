@@ -30,21 +30,21 @@ class SIFTFeatures:
         else:
             list_dir_for_kmeans, list_dir_for_quantization = list_dir, list_dir
 
-        print('Creating a csv file of descriptors from a subset of images in the directory...')
-        for f in tqdm.tqdm(list_dir_for_kmeans):
-            ext = os.path.splitext(f)[1]
-            if ext.lower() not in valid_types:
-                continue
-            image = cv2.imread(os.path.join(input_path, f))
-            des_kmeans = self.generate_descriptor(image)  # Assuming generate_descriptor function is defined elsewhere
-            # generate a dataframe with the descriptors and a column with the image name
-            df_aux = pd.DataFrame(des_kmeans)
-            df_aux['image_name'] = f
-            df_aux['class'] = self.get_class(f)
-            descriptors_for_kmeans_list.append(df_aux)
-        descriptors_for_kmeans_list = pd.concat(descriptors_for_kmeans_list)
-        self.to_csv(descriptors_for_kmeans_list,subindex='kmeans')
-        del descriptors_for_kmeans_list
+        # print('Creating a csv file of descriptors from a subset of images in the directory...')
+        # for f in tqdm.tqdm(list_dir_for_kmeans):
+        #     ext = os.path.splitext(f)[1]
+        #     if ext.lower() not in valid_types:
+        #         continue
+        #     image = cv2.imread(os.path.join(input_path, f))
+        #     des_kmeans = self.generate_descriptor(image)  # Assuming generate_descriptor function is defined elsewhere
+        #     # generate a dataframe with the descriptors and a column with the image name
+        #     df_aux = pd.DataFrame(des_kmeans)
+        #     df_aux['image_name'] = f
+        #     df_aux['class'] = self.get_class(f)
+        #     descriptors_for_kmeans_list.append(df_aux)
+        # descriptors_for_kmeans_list = pd.concat(descriptors_for_kmeans_list)
+        # self.to_csv(descriptors_for_kmeans_list,subindex='kmeans')
+        # del descriptors_for_kmeans_list
 
         if self.subsample_ratio < 1.0:
             print('Creating a csv file of descriptors for quantization...')

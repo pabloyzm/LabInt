@@ -29,6 +29,8 @@ class collection_to_hists(SIFTFeatures):
         #CLUSTERING
         self.model_save_path = self.setup['clusterization_config']['save_model_path']
         self.n_clusters = self.setup['clusterization_config']['n_clusters']
+        self.chunk_size = self.setup['clusterization_config']['chunk_size']
+        self.batch_size = self.setup['clusterization_config']['batch_size']
         if self.setup['execution_pipeline']['clusterization']:
             self.clusterization_input_csv = self.setup['clusterization_config']['input_path']
             self.elbow = self.setup['clusterization_config']['perform_elbow_method_for_tuning']
@@ -37,6 +39,8 @@ class collection_to_hists(SIFTFeatures):
                 print(f'Using elbow vector {self.elbow_vector}')
             self.plot_clustering = self.setup['clusterization_config']['kmeans_plot']
             self.kmeans_model, self.n_clusters = initialize_kmeans(self.clusterization_input_csv,
+                                                                self.chunk_size,
+                                                                self.batch_size,
                                                                 self.elbow,
                                                                 np.linspace(*self.elbow_vector, dtype = int),
                                                                 self.plot_clustering)
@@ -68,4 +72,4 @@ class collection_to_hists(SIFTFeatures):
         return config
 
 
-collection_to_hists('/root/labint/scripts/LabInt/config/full_images_to_hist_config.yaml')
+collection_to_hists('/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/config/full_images_to_hist_config.yaml')

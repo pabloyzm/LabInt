@@ -7,22 +7,25 @@ execution_pipeline:
   hist_gen: True
 
 SIFT_config:
-  input_path: '/root/labint/scripts/LabInt/data/GPR1200/images'
-  output_path: '/root/labint/scripts/LabInt/csv' 
-  number_of_descriptors: 1000
+  input_path: '/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/dataset/total'
+  output_path: '/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/csv'
+  number_of_descriptors: 10000
   subsample_ratio: 0.35
 
 clusterization_config:
-  input_path: '/root/labint/scripts/LabInt/csv'
+  input_path: '/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/csv'
+  chunk_size: 2048576
+  batch_size: 62768
   perform_elbow_method_for_tuning: True
-  elbow_method_vector: [200, 1000,50] #linspace vector
+  elbow_method_vector: [10, 1000, 10] #linspace vector
   kmeans_plot: False
-  save_model_path: '/root/labint/scripts/LabInt/models'
+  save_model_path: '/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/models'
   n_clusters: 120
+
 word_gen_config:
-  input_path: '/root/labint/scripts/LabInt/csv'
-  output_path: '/root/labint/scripts/LabInt/csv' 
+  input_path: '/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/csv'
+  output_path: '/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/csv'
 
 histogram_gen_config:
-  input_path: '/root/labint/scripts/LabInt/csv' 
-  output_path: '/root/labint/scripts/LabInt/csv' 
+  input_path: '/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/csv'
+  output_path: '/mnt/c/Users/pyanez/Desktop/pablo/universidad/LabInt/csv'
