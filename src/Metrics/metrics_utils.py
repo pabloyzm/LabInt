@@ -1,9 +1,11 @@
+import time
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image 
 from src.SIFT.SIFT_gen_and_utils import SIFTFeatures
 SIFT = SIFTFeatures("", "", run=False)
 from tqdm import tqdm
+
 def similarity_metric(vec_1,vec_2, measure = 'euclidean'):
     if measure == 'euclidean':
         resta = vec_1 - vec_2
@@ -65,7 +67,13 @@ def get_hist_from_str(value, separator):
     hist = [i for i in hist if i != '']
     hist = np.array(hist, dtype=np.float32)
     return hist
-    
+
+def query_image_normal(df_, image_name, measure="cosine", feature_type = "CNN"):
+    df_["similarity"] = df_[f"features_{feature_type}"].apply(lambda x: similarity_metric(x, df_[df_["image_name"] == image_name][f"features_{feature_type}"].values[0], measure=measure))
+    df_ = df_.sort_values(by=['similarity'])
+    df_ = df_.reset_index(drop=True)
+    return df_
+
 def plot_histogram(df, index, n_bins, feature_type = 'histogram'):
     if feature_type == 'histogram':
         hist = get_hist_from_str(df[f"features_histogram"][index], separator=' ')
@@ -78,11 +86,20 @@ def plot_histogram(df, index, n_bins, feature_type = 'histogram'):
         return
 
     if feature_type == 'CNN': 
-        hist = get_hist_from_str(df["features_CNN"][index], separator = ',')
-        x = np.arange(0, 4096) 
-
+        #hist = get_hist_from_str(df["features_CNN"][index], separator = ',')
+        x = np.arange(0, n_bins) 
         #plt.figure().set_figwidth(200)
-        plt.bar(x, hist)
+        plt.bar(x, df["features_CNN"][index])
+        plt.title("Feature Vector")
+        plt.xlabel("Length")
+        plt.ylabel("Value")
+        plt.show()
+        return 
+    if feature_type == 'fusion': 
+        #hist = get_hist_from_str(df["features_CNN"][index], separator = ',')
+        x = np.arange(0, n_bins) 
+        #plt.figure().set_figwidth(200)
+        plt.bar(x, df["features_fusion"][index])
         plt.title("Feature Vector")
         plt.xlabel("Length")
         plt.ylabel("Value")
@@ -148,3 +165,39 @@ def similarity_matrix(df, measure="cosine", feature_type = "histogram"):
             similarity_matrix[i, j] = similarity_metric(df[f"features_{feature_type}"][i], df[f"features_{feature_type}"][j], measure=measure)
     return similarity_matrix
 
+def consult_all(df_,image_example,measure, path_to_images):
+    start = time.time()
+    df_query_hand = query_image_normal(df_, image_example, measure=measure, feature_type = "histogram")
+    print(f"Handcrafted query time:{np.round(time.time() - start,3)}")
+    start = time.time()
+
+    df_query_CNN = query_image_normal(df_,image_example, measure=measure, feature_type = "CNN")
+    print(f"CNN query time:{np.round(time.time() - start,3)}")
+    start = time.time()
+    df_fusion_query = query_image_normal(df_, image_example, measure=measure, feature_type = "fusion")
+    print(f"Fusion query time:{np.round(time.time() - start,3)}")
+    # Create a figure with three rows and ten columns
+    fig, axes = plt.subplots(nrows=3, ncols=10, figsize=(15, 4))
+
+    # Iterate over each row and column to plot the images
+    for i in range(3):
+        for j in range(10):
+            if i == 0:
+                axes[i, j].imshow(Image.open(f'{path_to_images}/{df_query_hand["image_name"][j]}'))
+            elif i == 1:
+                axes[i, j].imshow(Image.open(f'{path_to_images}/{df_query_CNN["image_name"][j]}'))
+            else:
+                axes[i, j].imshow(Image.open(f'{path_to_images}/{df_fusion_query["image_name"][j]}'))
+            axes[i, j].axis('off')
+
+    # Set the title for each row
+    axes[0, 0].set_title('Handcrafted Features')
+    axes[1, 0].set_title('CNN Features')
+    axes[2, 0].set_title('Fused Features')
+
+    # Adjust the spacing between subplots
+    plt.tight_layout()
+
+    # Show the plot
+    plt.show()
+    return
