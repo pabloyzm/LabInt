@@ -76,10 +76,11 @@ def plot_histogram(df, index, n_bins, feature_type = 'histogram'):
         plt.show()
         return
 
-    if feature_type == 'CNN':
+    if feature_type == 'CNN': 
         hist = get_hist_from_str(df["features_CNN"][index], separator = ',')
-        x = np.arange(0, 4096)
-        plt.figure().set_figwidth(300)
+        x = np.arange(0, 4096) 
+
+        #plt.figure().set_figwidth(200)
         plt.bar(x, hist)
         plt.title("Feature Vector")
         plt.xlabel("Length")
