@@ -34,3 +34,7 @@ Notebook de jupyter con el informe final del proyecto
 #### Presentacion_proyecto_final.pdf
 Presentación del proyecto
 
+## Github Repo
+
+https://github.com/pabloyzm/LabInt
+
