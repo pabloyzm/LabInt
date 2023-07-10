@@ -5,7 +5,7 @@ from PIL import Image
 from src.SIFT.SIFT_gen_and_utils import SIFTFeatures
 SIFT = SIFTFeatures("", "", run=False)
 from tqdm import tqdm
-
+import pandas as pd
 def similarity_metric(vec_1,vec_2, measure = 'euclidean'):
     if measure == 'euclidean':
         resta = vec_1 - vec_2
@@ -201,3 +201,32 @@ def consult_all(df_,image_example,measure, path_to_images):
     # Show the plot
     plt.show()
     return
+
+
+def consult_time_one_stats(df_,measure,feature_type):
+    save = []
+    for image_example in tqdm(df_['image_name']):
+        start = time.time()
+        query_image_normal(df_, image_example, measure=measure, feature_type = feature_type)
+        save.append(np.round(time.time() - start,6))
+    return save
+
+def consult_all_time_stats(df_,measure):
+    for image_example in tqdm(df_['image_name']):
+        hand = []
+        cnn = []
+        fusion =  []
+        start = time.time()
+        df_query_hand = query_image_normal(df_, image_example, measure=measure, feature_type = "histogram")
+        #print(f"Handcrafted query time:{np.round(time.time() - start,3)}")
+        hand.append(np.round(time.time() - start,6))
+        start = time.time()
+
+        df_query_CNN = query_image_normal(df_,image_example, measure=measure, feature_type = "CNN")
+        #print(f"CNN query time:{np.round(time.time() - start,3)}")
+        cnn.append(np.round(time.time() - start,6))
+        start = time.time()
+        df_fusion_query = query_image_normal(df_, image_example, measure=measure, feature_type = "fusion")
+        fusion.append(np.round(time.time() - start,6))
+        #print(f"Fusion query time:{np.round(time.time() - start,3)}")
+        result_df = pd.DataFrame([hand,cnn,fusion])
